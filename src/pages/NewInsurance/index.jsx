@@ -4,34 +4,23 @@ import ProForm, {
   StepsForm,
   ProFormText,
   ProFormDatePicker,
-  ProFormDateTimePicker,
   ProFormSelect,
-  ProFormTextArea,
-  ProFormCheckbox,
-  ProFormTimeRangePicker,
-  ProFormDateRangePicker,
   ProFormDateTimeRangePicker,
-  ProFormDependency,
   ProFormDigit,
   ProFormRadio,
   ProFormUploadDragger,
 } from '@ant-design/pro-form';
-import { Button, message, Card, Typography, Divider, Grid, Collapse, Alert } from 'antd';
+import { Button, message, Card, Typography, Divider, Grid, Collapse } from 'antd';
 import { useIntl, FormattedMessage } from 'umi';
-import moment from 'moment';
 import {
-  CalculatorOutlined,
   CalendarOutlined,
-  DollarOutlined,
   EuroOutlined,
   IdcardOutlined,
-  InboxOutlined,
   MailOutlined,
-  MobileOutlined,
   UsergroupAddOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import Dragger from 'antd/lib/upload/Dragger';
+import { AlertInvalidNumberPeople } from './AlertInvalidNumberPeople';
 
 const createArray = (numElements) => new Array(numElements).fill(0).map((_, i) => i + 1);
 
@@ -67,34 +56,7 @@ export default () => {
   return (
     <PageContainer>
       {step === 2 && (
-        <p>
-          {numPeople < 1 ? (
-            <Alert
-              message={formatMessage({
-                id: 'pages.newInsurance.people.noPeopleErrorMessage',
-                defaultMessage: 'Error: invalid number of people selected',
-              })}
-              type="error"
-              showIcon
-            />
-          ) : numPeople !== fileList.length ? (
-            <Alert
-              message={formatMessage(
-                {
-                  id: 'pages.newInsurance.people.noPeopleErrorMessage',
-                  defaultMessage:
-                    'Invalid number of PCRs. There are {numPeople} persons in the contract. And {numNegativePCR} negative PCRs were provided',
-                },
-                {
-                  numPeople,
-                  numNegativePCR: fileList.length,
-                },
-              )}
-              type="error"
-              showIcon
-            />
-          ) : null}
-        </p>
+        <AlertInvalidNumberPeople numPeople={numPeople} numNegativePCR={fileList.length} />
       )}
       <Card>
         <StepsForm
@@ -114,35 +76,15 @@ export default () => {
           submitter={{
             render: ({ form, onSubmit, step, onPre }) => {
               return [
-                <Button
-                  key="rest"
-                  onClick={() => {
-                    form?.resetFields();
-                  }}
-                >
-                  <FormattedMessage id="pages.newInsurance.resetButton" defaultMessage="Reset" />
-                </Button>,
                 step > 0 && (
-                  <Button
-                    key="pre"
-                    onClick={() => {
-                      onPre?.();
-                    }}
-                  >
+                  <Button key="pre" onClick={() => onPre?.()}>
                     <FormattedMessage
                       id="pages.newInsurance.prevStepButton"
                       defaultMessage="Previous Step"
                     />
                   </Button>
                 ),
-                <Button
-                  key="next"
-                  loading={loading}
-                  type="primary"
-                  onClick={() => {
-                    onSubmit?.();
-                  }}
-                >
+                <Button key="next" loading={loading} type="primary" onClick={() => onSubmit?.()}>
                   <FormattedMessage
                     id="pages.newInsurance.nextStepButton"
                     defaultMessage="Next Step"
@@ -166,6 +108,7 @@ export default () => {
               id: 'pages.newInsurance.contract.title',
               defaultMessage: 'Contract',
             })}
+            size="large"
           >
             <Divider>
               <Typography.Title level={2}>
@@ -204,8 +147,6 @@ export default () => {
                 minuteStep: 15,
                 size: 'large',
               }}
-
-              // required
             />
 
             <ProFormSelect
@@ -250,7 +191,6 @@ export default () => {
                 defaultMessage: 'Number of Lockdown days:',
               })}
               initialValue={`${NUM_DAYS_LOCKDOWN} days`}
-              // disabled
               readonly
               fieldProps={{
                 size: 'large',
@@ -284,8 +224,6 @@ export default () => {
               fieldProps={{
                 size: 'large',
               }}
-
-              // required
             />
           </StepsForm.StepForm>
 
@@ -295,6 +233,7 @@ export default () => {
               id: 'pages.newInsurance.holder.title',
               defaultMessage: 'Policy Holder',
             })}
+            size="large"
           >
             <ProFormText
               width={currentBreakpoint}
@@ -480,8 +419,8 @@ export default () => {
               id: 'pages.newInsurance.people.title',
               defaultMessage: 'People',
             })}
+            size="large"
           >
-            {/* <div>{JSON.stringify(fileList)}</div> */}
             <div style={{ margin: 'auto' }}>
               <ProFormUploadDragger
                 name="people__pcrs"
