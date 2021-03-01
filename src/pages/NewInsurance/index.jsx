@@ -15,10 +15,13 @@ import { Button, message, Card, Typography, Divider, Grid, Collapse } from 'antd
 import { useIntl, FormattedMessage } from 'umi';
 import {
   CalendarOutlined,
+  CreditCardOutlined,
   EuroOutlined,
+  HomeOutlined,
   IdcardOutlined,
   MailOutlined,
   MobileOutlined,
+  PhoneOutlined,
   UsergroupAddOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -252,7 +255,9 @@ export default () => {
               //   size: 'large',
               //   prefix: <IdcardOutlined />,
               // }}
+              rules={[{ required: true }]}
               fieldProps={{
+                prefix: <IdcardOutlined />,
                 size: 'large',
               }}
               initialValue="12345678Z"
@@ -273,7 +278,9 @@ export default () => {
               //   size: 'large',
               //   prefix: <UserOutlined />,
               // }}
+              rules={[{ required: true }]}
               fieldProps={{
+                prefix: <HomeOutlined />,
                 size: 'large',
               }}
             />
@@ -289,7 +296,9 @@ export default () => {
                 defaultMessage: 'Avenida Patricio Estrella 314',
               })}
               initialValue="Avenida Patricio Estrella 314"
+              rules={[{ required: true }]}
               fieldProps={{
+                prefix: <HomeOutlined />,
                 size: 'large',
               }}
             />
@@ -305,7 +314,9 @@ export default () => {
                 defaultMessage: '11235',
               })}
               initialValue="11235"
+              rules={[{ required: true }]}
               fieldProps={{
+                prefix: <HomeOutlined />,
                 size: 'large',
               }}
             />
@@ -321,7 +332,9 @@ export default () => {
                 defaultMessage: 'Santa Cruz de Tenerife',
               })}
               initialValue="Santa Cruz de Tenerife"
+              rules={[{ required: true }]}
               fieldProps={{
+                prefix: <HomeOutlined />,
                 size: 'large',
               }}
             />
@@ -337,7 +350,9 @@ export default () => {
                 defaultMessage: 'Santa Cruz de Tenerife',
               })}
               initialValue="Santa Cruz de Tenerife"
+              rules={[{ required: true }]}
               fieldProps={{
+                prefix: <HomeOutlined />,
                 size: 'large',
               }}
             />
@@ -353,14 +368,8 @@ export default () => {
                 defaultMessage: '123456789',
               })}
               rules={[
-                // {
-                //   required: true,
-                //   message: formatMessage({
-                //     id: 'pages.login.phoneNumber.required',
-                //     defaultMessage: 'Please enter your cell phone number!',
-                //   }),
-                // },
                 {
+                  required: true,
                   pattern: /^\d{9}$/,
                   message: formatMessage({
                     id: 'pages.newInsurance.holder.phoneNumber.required',
@@ -368,12 +377,9 @@ export default () => {
                   }),
                 },
               ]}
-              // fieldProps={{
-              //   size: 'large',
-              //   prefix: <MobileOutlined />,
-              // }}
               initialValue="123456678"
               fieldProps={{
+                prefix: <PhoneOutlined />,
                 size: 'large',
               }}
             />
@@ -389,14 +395,8 @@ export default () => {
                 defaultMessage: '123456789',
               })}
               rules={[
-                // {
-                //   required: true,
-                //   message: formatMessage({
-                //     id: 'pages.login.mobileNumber.required',
-                //     defaultMessage: 'Please enter your cell mobile number!',
-                //   }),
-                // },
                 {
+                  required: true,
                   pattern: /^\d{9}$/,
                   message: formatMessage({
                     id: 'pages.newInsurance.holder.mobileNumber.required',
@@ -404,13 +404,11 @@ export default () => {
                   }),
                 },
               ]}
-              // fieldProps={{
-              //   size: 'large',
-              //   prefix: <MobileOutlined />,
-              // }}
               initialValue="922123456"
+              rules={[{ required: true }]}
               fieldProps={{
                 size: 'large',
+                prefix: <MobileOutlined />,
               }}
             />
             <ProFormText
@@ -432,6 +430,7 @@ export default () => {
               ]}
               initialValue="bob@hot.el"
               fieldProps={{
+                prefix: <MailOutlined />,
                 size: 'large',
               }}
             />
@@ -448,6 +447,7 @@ export default () => {
               })}
               rules={[
                 {
+                  required: true,
                   pattern: /([a-zA-Z]{2})\s*\t*(\d{2})\s*\t*(\d{4})\s*\t*(\d{4})\s*\t*(\d{2})\s*\t*(\d{10})/,
                   message: formatMessage({
                     id: 'pages.newInsurance.holder.iban.required',
@@ -457,6 +457,7 @@ export default () => {
               ]}
               initialValue="ES 11 2222 3333 44 5555555555"
               fieldProps={{
+                prefix: <CreditCardOutlined />,
                 size: 'large',
               }}
             />
