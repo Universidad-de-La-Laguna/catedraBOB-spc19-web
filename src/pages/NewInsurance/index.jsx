@@ -4,6 +4,7 @@ import ProForm, {
   StepsForm,
   ProFormText,
   ProFormDatePicker,
+  ProFormDateTimePicker,
   ProFormSelect,
   ProFormDateTimeRangePicker,
   ProFormDigit,
@@ -17,6 +18,7 @@ import {
   EuroOutlined,
   IdcardOutlined,
   MailOutlined,
+  MobileOutlined,
   UsergroupAddOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -494,7 +496,7 @@ export default () => {
                   expandIconPosition="right"
                   style={{ backgroundColor: 'transparent', width: '100%' }}
                   // defaultActiveKey={createArray(numPeople)}
-                  // defaultActiveKey={[1]}
+                  defaultActiveKey={[1]}
                 >
                   {createArray(numPeople).map((i) => (
                     <Panel
@@ -554,6 +556,32 @@ export default () => {
                           prefix: <MailOutlined />,
                         }}
                       />
+                      <ProFormText
+                        width={currentBreakpoint}
+                        name={`people__phone_${i}`}
+                        label={formatMessage({
+                          id: 'pages.newInsurance.people.phone.label',
+                          defaultMessage: 'Phone number',
+                        })}
+                        placeholder={formatMessage({
+                          id: 'pages.newInsurance.people.phone.placeholder',
+                          defaultMessage: '123456789',
+                        })}
+                        // rules={[{ type: 'tel' }]}
+                        rules={[
+                          {
+                            pattern: /^\d{9}$/,
+                            message: formatMessage({
+                              id: 'pages.newInsurance.people.phone.required',
+                              defaultMessage: 'Wrong format of cell phone number!',
+                            }),
+                          },
+                        ]}
+                        fieldProps={{
+                          size: 'large',
+                          prefix: <MobileOutlined />,
+                        }}
+                      />
                       <ProFormRadio.Group
                         width={currentBreakpoint}
                         name={`people__gender_${i}`}
@@ -606,8 +634,21 @@ export default () => {
                         })}
                         fieldProps={{
                           format: 'YYYY-MM-DD',
+                          size: 'large',
                         }}
+                      />
+                      <ProFormDateTimePicker
+                        width={currentBreakpoint}
+                        name={`people__pcr_date_${i}`}
+                        label={formatMessage({
+                          id: 'pages.newInsurance.people.pcrDate.label',
+                          defaultMessage: 'Negative PCR Date',
+                        })}
                         fieldProps={{
+                          format: 'YYYY-MM-DD HH:mm',
+                          showSecond: false,
+                          showToday: true,
+                          minuteStep: 15,
                           size: 'large',
                         }}
                       />
