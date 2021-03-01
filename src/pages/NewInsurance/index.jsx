@@ -251,10 +251,6 @@ export default () => {
                 id: 'pages.newInsurance.holder.nif.placeholder',
                 defaultMessage: '12345678Z',
               })}
-              // fieldProps={{
-              //   size: 'large',
-              //   prefix: <IdcardOutlined />,
-              // }}
               rules={[{ required: true }]}
               fieldProps={{
                 prefix: <IdcardOutlined />,
@@ -274,10 +270,6 @@ export default () => {
                 defaultMessage: 'Hotel Piña Bob',
               })}
               initialValue="Hotel Piña Bob"
-              // fieldProps={{
-              //   size: 'large',
-              //   prefix: <UserOutlined />,
-              // }}
               rules={[{ required: true }]}
               fieldProps={{
                 prefix: <HomeOutlined />,
@@ -471,191 +463,224 @@ export default () => {
             })}
             size="large"
           >
-            <div style={{ margin: 'auto' }}>
-              <ProFormUploadDragger
-                name="people__pcrs"
-                width={currentBreakpoint}
-                title="Negative PCRs"
-                description="Click or drag files to this area to upload"
-                showRemoveIcon
-                fileList={fileList}
-                onChange={({ fileList }) => {
-                  setFileList(fileList);
-                }}
-                action=""
-                customRequest={() => {}}
-                fieldProps={{
-                  listType: 'picture',
-                  multiple: 'true',
-                }}
+            <Divider>
+              <FormattedMessage
+                id="pages.newInsurance.people.dividerLabel"
+                defaultMessage="Negative PCRs"
               />
-            </div>
+            </Divider>
+            <ProFormUploadDragger
+              name="people__pcrs"
+              width={currentBreakpoint}
+              title="Negative PCRs"
+              description="Click or drag files to this area to upload"
+              showRemoveIcon
+              fileList={fileList}
+              onChange={({ fileList }) => {
+                setFileList(fileList);
+              }}
+              action=""
+              customRequest={() => {}}
+              fieldProps={{
+                listType: 'picture',
+                multiple: 'true',
+              }}
+            />
 
             <div style={{ marginBottom: '1rem' }}>
               {numPeople >= 1 && numPeople === fileList.length && (
-                <Collapse
-                  expandIconPosition="right"
-                  style={{ backgroundColor: 'transparent', width: '100%' }}
-                  // defaultActiveKey={createArray(numPeople)}
-                  defaultActiveKey={[1]}
-                >
-                  {createArray(numPeople).map((i) => (
-                    <Panel
-                      header={
-                        <Typography.Text>
-                          <UserOutlined /> {i}. {fileList[i - 1].name}
-                        </Typography.Text>
-                      }
-                      key={i}
-                    >
-                      <ProFormText
-                        width={currentBreakpoint}
-                        name={`people__nif_${i}`}
-                        label={formatMessage({
-                          id: 'pages.newInsurance.people.nif.label',
-                          defaultMessage: 'NIF',
-                        })}
-                        placeholder={formatMessage({
-                          id: 'pages.newInsurance.people.nif.placeholder',
-                          defaultMessage: '12345678Z',
-                        })}
-                        fieldProps={{
-                          size: 'large',
-                          prefix: <IdcardOutlined />,
-                        }}
-                      />
-                      <ProFormText
-                        width={currentBreakpoint}
-                        name={`people__name_${i}`}
-                        label={formatMessage({
-                          id: 'pages.newInsurance.people.name.label',
-                          defaultMessage: 'Name',
-                        })}
-                        placeholder={formatMessage({
-                          id: 'pages.newInsurance.people.name.placeholder',
-                          defaultMessage: 'Chaxiraxi Rodríguez González',
-                        })}
-                        fieldProps={{
-                          size: 'large',
-                          prefix: <UserOutlined />,
-                        }}
-                      />
-                      <ProFormText
-                        width={currentBreakpoint}
-                        name={`people__email_${i}`}
-                        label={formatMessage({
-                          id: 'pages.newInsurance.people.email.label',
-                          defaultMessage: 'E-mail',
-                        })}
-                        placeholder={formatMessage({
-                          id: 'pages.newInsurance.people.email.placeholder',
-                          defaultMessage: 'chaxi@raxi.rg',
-                        })}
-                        rules={[{ type: 'email' }]}
-                        fieldProps={{
-                          size: 'large',
-                          prefix: <MailOutlined />,
-                        }}
-                      />
-                      <ProFormText
-                        width={currentBreakpoint}
-                        name={`people__phone_${i}`}
-                        label={formatMessage({
-                          id: 'pages.newInsurance.people.phone.label',
-                          defaultMessage: 'Phone number',
-                        })}
-                        placeholder={formatMessage({
-                          id: 'pages.newInsurance.people.phone.placeholder',
-                          defaultMessage: '123456789',
-                        })}
-                        // rules={[{ type: 'tel' }]}
-                        rules={[
-                          {
-                            pattern: /^\d{9}$/,
-                            message: formatMessage({
-                              id: 'pages.newInsurance.people.phone.required',
-                              defaultMessage: 'Wrong format of cell phone number!',
-                            }),
-                          },
-                        ]}
-                        fieldProps={{
-                          size: 'large',
-                          prefix: <MobileOutlined />,
-                        }}
-                      />
-                      <ProFormRadio.Group
-                        width={currentBreakpoint}
-                        name={`people__gender_${i}`}
-                        label={formatMessage({
-                          id: 'pages.newInsurance.people.gender.label',
-                          defaultMessage: 'I am',
-                        })}
-                        options={[
-                          {
-                            label: formatMessage({
-                              id: 'pages.newInsurance.people.gender.female',
-                              defaultMessage: 'Female',
-                            }),
-                            value: formatMessage({
-                              id: 'pages.newInsurance.people.gender.female',
-                              defaultMessage: 'Female',
-                            }),
-                          },
-                          {
-                            label: formatMessage({
-                              id: 'pages.newInsurance.people.gender.male',
-                              defaultMessage: 'Male',
-                            }),
-                            value: formatMessage({
-                              id: 'pages.newInsurance.people.gender.male',
-                              defaultMessage: 'Male',
-                            }),
-                          },
-                          {
-                            label: formatMessage({
-                              id: 'pages.newInsurance.people.gender.nonBinary',
-                              defaultMessage: 'Non-binary',
-                            }),
-                            value: formatMessage({
-                              id: 'pages.newInsurance.people.gender.nonBinary',
-                              defaultMessage: 'Non-binary',
-                            }),
-                          },
-                        ]}
-                        fieldProps={{
-                          size: 'large',
-                        }}
-                      />
-                      <ProFormDatePicker
-                        width={currentBreakpoint}
-                        name={`people__birthday_${i}`}
-                        label={formatMessage({
-                          id: 'pages.newInsurance.people.birthday.label',
-                          defaultMessage: 'Birthday',
-                        })}
-                        fieldProps={{
-                          format: 'YYYY-MM-DD',
-                          size: 'large',
-                        }}
-                      />
-                      <ProFormDateTimePicker
-                        width={currentBreakpoint}
-                        name={`people__pcr_date_${i}`}
-                        label={formatMessage({
-                          id: 'pages.newInsurance.people.pcrDate.label',
-                          defaultMessage: 'Negative PCR Date',
-                        })}
-                        fieldProps={{
-                          format: 'YYYY-MM-DD HH:mm',
-                          showSecond: false,
-                          showToday: true,
-                          minuteStep: 15,
-                          size: 'large',
-                        }}
-                      />
-                    </Panel>
-                  ))}
-                </Collapse>
+                <>
+                  <Divider>
+                    <FormattedMessage
+                      id="pages.newInsurance.people.dividerLabel"
+                      defaultMessage="Request PCR Date"
+                    />
+                  </Divider>
+                  <ProFormDateTimePicker
+                    width={currentBreakpoint}
+                    name="people__request_pcr_date"
+                    label={formatMessage({
+                      id: 'pages.newInsurance.people.requestPcrDate.label',
+                      defaultMessage: 'Preferred Date for Requesting the PCR',
+                    })}
+                    fieldProps={{
+                      format: 'YYYY-MM-DD HH:mm',
+                      showSecond: false,
+                      showToday: true,
+                      minuteStep: 15,
+                      size: 'large',
+                    }}
+                  />
+                  <Divider>
+                    <FormattedMessage
+                      id="pages.newInsurance.people.dividerLabel"
+                      defaultMessage="People Data"
+                    />
+                  </Divider>
+                  <Collapse
+                    expandIconPosition="right"
+                    style={{ backgroundColor: 'transparent', width: '100%' }}
+                    // defaultActiveKey={createArray(numPeople)}
+                    defaultActiveKey={[1]}
+                  >
+                    {createArray(numPeople).map((i) => (
+                      <Panel
+                        header={
+                          <Typography.Text>
+                            <UserOutlined /> {i}. {fileList[i - 1].name}
+                          </Typography.Text>
+                        }
+                        key={i}
+                      >
+                        <ProFormText
+                          width={currentBreakpoint}
+                          name={`people__nif_${i}`}
+                          label={formatMessage({
+                            id: 'pages.newInsurance.people.nif.label',
+                            defaultMessage: 'NIF',
+                          })}
+                          placeholder={formatMessage({
+                            id: 'pages.newInsurance.people.nif.placeholder',
+                            defaultMessage: '12345678Z',
+                          })}
+                          fieldProps={{
+                            size: 'large',
+                            prefix: <IdcardOutlined />,
+                          }}
+                        />
+                        <ProFormText
+                          width={currentBreakpoint}
+                          name={`people__name_${i}`}
+                          label={formatMessage({
+                            id: 'pages.newInsurance.people.name.label',
+                            defaultMessage: 'Name',
+                          })}
+                          placeholder={formatMessage({
+                            id: 'pages.newInsurance.people.name.placeholder',
+                            defaultMessage: 'Chaxiraxi Rodríguez González',
+                          })}
+                          fieldProps={{
+                            size: 'large',
+                            prefix: <UserOutlined />,
+                          }}
+                        />
+                        <ProFormText
+                          width={currentBreakpoint}
+                          name={`people__email_${i}`}
+                          label={formatMessage({
+                            id: 'pages.newInsurance.people.email.label',
+                            defaultMessage: 'E-mail',
+                          })}
+                          placeholder={formatMessage({
+                            id: 'pages.newInsurance.people.email.placeholder',
+                            defaultMessage: 'chaxi@raxi.rg',
+                          })}
+                          rules={[{ type: 'email' }]}
+                          fieldProps={{
+                            size: 'large',
+                            prefix: <MailOutlined />,
+                          }}
+                        />
+                        <ProFormText
+                          width={currentBreakpoint}
+                          name={`people__phone_${i}`}
+                          label={formatMessage({
+                            id: 'pages.newInsurance.people.phone.label',
+                            defaultMessage: 'Phone number',
+                          })}
+                          placeholder={formatMessage({
+                            id: 'pages.newInsurance.people.phone.placeholder',
+                            defaultMessage: '123456789',
+                          })}
+                          // rules={[{ type: 'tel' }]}
+                          rules={[
+                            {
+                              pattern: /^\d{9}$/,
+                              message: formatMessage({
+                                id: 'pages.newInsurance.people.phone.required',
+                                defaultMessage: 'Wrong format of cell phone number!',
+                              }),
+                            },
+                          ]}
+                          fieldProps={{
+                            size: 'large',
+                            prefix: <MobileOutlined />,
+                          }}
+                        />
+                        <ProFormRadio.Group
+                          width={currentBreakpoint}
+                          name={`people__gender_${i}`}
+                          label={formatMessage({
+                            id: 'pages.newInsurance.people.gender.label',
+                            defaultMessage: 'I am',
+                          })}
+                          options={[
+                            {
+                              label: formatMessage({
+                                id: 'pages.newInsurance.people.gender.female',
+                                defaultMessage: 'Female',
+                              }),
+                              value: formatMessage({
+                                id: 'pages.newInsurance.people.gender.female',
+                                defaultMessage: 'Female',
+                              }),
+                            },
+                            {
+                              label: formatMessage({
+                                id: 'pages.newInsurance.people.gender.male',
+                                defaultMessage: 'Male',
+                              }),
+                              value: formatMessage({
+                                id: 'pages.newInsurance.people.gender.male',
+                                defaultMessage: 'Male',
+                              }),
+                            },
+                            {
+                              label: formatMessage({
+                                id: 'pages.newInsurance.people.gender.nonBinary',
+                                defaultMessage: 'Non-binary',
+                              }),
+                              value: formatMessage({
+                                id: 'pages.newInsurance.people.gender.nonBinary',
+                                defaultMessage: 'Non-binary',
+                              }),
+                            },
+                          ]}
+                          fieldProps={{
+                            size: 'large',
+                          }}
+                        />
+                        <ProFormDatePicker
+                          width={currentBreakpoint}
+                          name={`people__birthday_${i}`}
+                          label={formatMessage({
+                            id: 'pages.newInsurance.people.birthday.label',
+                            defaultMessage: 'Birthday',
+                          })}
+                          fieldProps={{
+                            format: 'YYYY-MM-DD',
+                            size: 'large',
+                          }}
+                        />
+                        <ProFormDateTimePicker
+                          width={currentBreakpoint}
+                          name={`people__pcr_date_${i}`}
+                          label={formatMessage({
+                            id: 'pages.newInsurance.people.pcrDate.label',
+                            defaultMessage: 'Negative PCR Date',
+                          })}
+                          fieldProps={{
+                            format: 'YYYY-MM-DD HH:mm',
+                            showSecond: false,
+                            showToday: true,
+                            minuteStep: 15,
+                            size: 'large',
+                          }}
+                        />
+                      </Panel>
+                    ))}
+                  </Collapse>
+                </>
               )}
             </div>
           </StepsForm.StepForm>
