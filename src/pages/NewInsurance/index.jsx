@@ -29,7 +29,7 @@ const { useBreakpoint } = Grid;
 const NUM_DAYS_LOCKDOWN = 10;
 const MAX_NUM_PEOPLE_PER_CONTRACT = 6;
 const NUM_PEOPLE_PER_CONTRACT_OPTIONS = createArray(MAX_NUM_PEOPLE_PER_CONTRACT);
-const PECUNIARY_LOSS_OPTIONS = [50, 100, 150, 200, 250, 500];
+const PECUNIARY_LOSS_OPTIONS = [50, 100, 300];
 
 const waitTime = (time = 100) => {
   return new Promise((resolve) => {
@@ -407,6 +407,53 @@ export default () => {
               //   prefix: <MobileOutlined />,
               // }}
               initialValue="922123456"
+              fieldProps={{
+                size: 'large',
+              }}
+            />
+            <ProFormText
+              width={currentBreakpoint}
+              name="holder__email"
+              label={formatMessage({
+                id: 'pages.newInsurance.holder.email.label',
+                defaultMessage: 'E-mail',
+              })}
+              placeholder={formatMessage({
+                id: 'pages.newInsurance.holder.email.placeholder',
+                defaultMessage: 'bob@hot.el',
+              })}
+              rules={[
+                {
+                  required: true,
+                  type: 'email',
+                },
+              ]}
+              initialValue="bob@hot.el"
+              fieldProps={{
+                size: 'large',
+              }}
+            />
+            <ProFormText
+              width={currentBreakpoint}
+              name="holder__iban"
+              label={formatMessage({
+                id: 'pages.newInsurance.holder.iban.label',
+                defaultMessage: 'IBAN',
+              })}
+              placeholder={formatMessage({
+                id: 'pages.newInsurance.holder.iban.placeholder',
+                defaultMessage: 'ES ',
+              })}
+              rules={[
+                {
+                  pattern: /([a-zA-Z]{2})\s*\t*(\d{2})\s*\t*(\d{4})\s*\t*(\d{4})\s*\t*(\d{2})\s*\t*(\d{10})/,
+                  message: formatMessage({
+                    id: 'pages.newInsurance.holder.iban.required',
+                    defaultMessage: 'Wrong IBAN format!',
+                  }),
+                },
+              ]}
+              initialValue="ES 11 2222 3333 44 5555555555"
               fieldProps={{
                 size: 'large',
               }}
