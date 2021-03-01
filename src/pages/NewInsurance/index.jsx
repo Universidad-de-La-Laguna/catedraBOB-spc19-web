@@ -251,7 +251,16 @@ export default () => {
                 id: 'pages.newInsurance.holder.nif.placeholder',
                 defaultMessage: '12345678Z',
               })}
-              rules={[{ required: true }]}
+              rules={[
+                {
+                  required: true,
+                  pattern: /^(\d{8})([A-Z])$/,
+                  message: formatMessage({
+                    id: 'pages.newInsurance.holder.nif.required',
+                    defaultMessage: 'Wrong NIF!',
+                  }),
+                },
+              ]}
               fieldProps={{
                 prefix: <IdcardOutlined />,
                 size: 'large',
@@ -369,7 +378,7 @@ export default () => {
                   }),
                 },
               ]}
-              initialValue="123456678"
+              initialValue="922123456"
               fieldProps={{
                 prefix: <PhoneOutlined />,
                 size: 'large',
@@ -396,7 +405,7 @@ export default () => {
                   }),
                 },
               ]}
-              initialValue="922123456"
+              initialValue="123456678"
               rules={[{ required: true }]}
               fieldProps={{
                 size: 'large',
@@ -420,7 +429,7 @@ export default () => {
                   type: 'email',
                 },
               ]}
-              initialValue="bob@hot.el"
+              initialValue="info@bobhotel.es"
               fieldProps={{
                 prefix: <MailOutlined />,
                 size: 'large',
@@ -440,7 +449,7 @@ export default () => {
               rules={[
                 {
                   required: true,
-                  pattern: /([a-zA-Z]{2})\s*\t*(\d{2})\s*\t*(\d{4})\s*\t*(\d{4})\s*\t*(\d{2})\s*\t*(\d{10})/,
+                  pattern: /^([a-zA-Z]{2})\s*\t*(\d{2})\s*\t*(\d{4})\s*\t*(\d{4})\s*\t*(\d{2})\s*\t*(\d{10})$/,
                   message: formatMessage({
                     id: 'pages.newInsurance.holder.iban.required',
                     defaultMessage: 'Wrong IBAN format!',
@@ -543,6 +552,15 @@ export default () => {
                             id: 'pages.newInsurance.people.nif.placeholder',
                             defaultMessage: '12345678Z',
                           })}
+                          rules={[
+                            {
+                              pattern: /^(\d{8})([A-Z])$/,
+                              message: formatMessage({
+                                id: 'pages.newInsurance.people.nif.required',
+                                defaultMessage: 'Wrong NIF!',
+                              }),
+                            },
+                          ]}
                           fieldProps={{
                             size: 'large',
                             prefix: <IdcardOutlined />,
