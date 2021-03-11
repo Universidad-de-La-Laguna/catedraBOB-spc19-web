@@ -53,6 +53,7 @@
     "@umijs/route-utils": "^1.0.33",
     "antd": "^4.10.0",
     "classnames": "^2.2.6",
+    "crypto-js": "^4.0.0",
     "lodash": "^4.17.11",
     "moment": "^2.25.3",
     "omit.js": "^2.0.2",
@@ -62,7 +63,8 @@
     "react-dom": "^17.0.0",
     "react-helmet-async": "^1.0.4",
     "umi": "^3.2.14",
-    "umi-request": "^1.0.8"
+    "umi-request": "^1.0.8",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^1.0.28",

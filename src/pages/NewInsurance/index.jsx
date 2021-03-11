@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import ProForm, {
+import {
   StepsForm,
   ProFormText,
   ProFormDatePicker,
@@ -26,6 +26,10 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { AlertInvalidNumberPeople } from './AlertInvalidNumberPeople';
+import sha256 from 'crypto-js/sha256';
+import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
+import request from '@/utils/request';
 
 const createArray = (numElements) => new Array(numElements).fill(0).map((_, i) => i + 1);
 
@@ -36,12 +40,62 @@ const MAX_NUM_PEOPLE_PER_CONTRACT = 6;
 const NUM_PEOPLE_PER_CONTRACT_OPTIONS = createArray(MAX_NUM_PEOPLE_PER_CONTRACT);
 const PECUNIARY_LOSS_OPTIONS = [50, 100, 300];
 
-const waitTime = (time = 100) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
+const readBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => resolve(e.target.result);
+    reader.onerror = (e) => reject(e);
+
+    reader.readAsDataURL(file);
   });
+
+const hashFileProxy = async (fileProxy) => {
+  const file = fileProxy.originFileObj;
+  const base64 = await readBase64(file);
+  const hash = await sha256(base64).toString();
+  return hash;
+};
+
+const parseFormData = async (data) => {
+  const pcrHashesPromises = data.people__pcrs.map(hashFileProxy);
+  const pcrHashes = await Promise.all(pcrHashesPromises);
+
+  return {
+    id: uuidv4(),
+    taker: {
+      takerId: 'd290f1ee-6c54-4b01-90e6-d701748f0852',
+      takerNif: data.holder__nif,
+      takerFullName: data.holder__name,
+      takerContactAddress: data.holder__address,
+      takerContactPostalCode: data.holder__postal_code,
+      takerContactTown: data.holder__municipality,
+      takerContactLocation: data.holder__locality,
+      takerContactTelephone: data.holder__phone,
+      takerContactMobile: data.holder__mobile,
+      takerContactEmail: data.holder__email,
+      takerIBAN: data.holder__iban,
+    },
+    customers: createArray(pcrHashes.length).map((i) => ({
+      customerId: `customer_${i}`,
+      customerNif: data[`people__nif_${i}`],
+      customerFullName: data[`people__name_${i}`],
+      customerGender: data[`people__gender_${i}`],
+      customerBirthDate: moment(data[`people__birthday_${i}`]).toISOString(),
+      customerTelephone: data[`people__phone_${i}`],
+      customerEmail: data[`people__email_${i}`],
+      negativePcrDate: moment(data[`people__pcr_date_${i}`]).toISOString(),
+      negativePcrHash: pcrHashes[i - 1],
+    })),
+    contractDate: moment().toISOString(),
+    startDate: moment(data.contract__times[0]).toISOString(),
+    finishDate: moment(data.contract__times[1]).toISOString(),
+    assuredPrice: PECUNIARY_LOSS_OPTIONS[data.contract__pecuniaryLoss],
+    pcrRequests: createArray(pcrHashes.length).map((i) => ({
+      customerId: `customer_${i}`,
+      requestDate: moment(data.people__request_pcr_date).toISOString(),
+      id: uuidv4(),
+    })),
+  };
 };
 
 export default () => {
@@ -67,9 +121,26 @@ export default () => {
         <StepsForm
           current={step}
           onCurrentChange={(current) => setStep(current)}
-          onFinish={async () => {
+          onFinish={async (data) => {
+            const formData = await parseFormData(data);
+            window.debug_data = { data, formData, moment };
+            console.log(window.debug_data);
+
             setLoading(true);
-            await waitTime(1000);
+
+            const response = await request('http://localhost:8080/insurances', {
+              method: 'POST',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization:
+                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJyb2xlIjoiaW5zdXJlciIsImlzcyI6IlVMTCJ9.xrJqsSp4lIp-rI4iHhYcPZnHqgMoa8BUgE-AJWNHTR4',
+              },
+              data: formData,
+            });
+
+            console.log({ response });
+
             message.success(
               formatMessage({
                 id: 'pages.newInsurance.successMessage',
@@ -79,7 +150,7 @@ export default () => {
             setLoading(false);
           }}
           submitter={{
-            render: ({ form, onSubmit, step, onPre }) => {
+            render: ({ onSubmit, onPre }) => {
               return [
                 step > 0 && (
                   <Button key="pre" onClick={() => onPre?.()}>
@@ -189,8 +260,8 @@ export default () => {
             </Divider>
 
             <ProFormText
-              width={currentBreakpoint}
               name="contract__daysLockdown"
+              width={currentBreakpoint}
               label={formatMessage({
                 id: 'pages.newInsurance.basicGuarantees.daysLockdown.label',
                 defaultMessage: 'Number of Lockdown days:',
@@ -206,7 +277,6 @@ export default () => {
             <ProFormSelect
               name="contract__pecuniaryLoss"
               width={currentBreakpoint}
-              name="pecuniaryLoss"
               label={formatMessage({
                 id: 'pages.newInsurance.basicGuarantees.pecuniaryLoss.label',
                 defaultMessage: 'Pecuniary Loss',
@@ -241,8 +311,8 @@ export default () => {
             size="large"
           >
             <ProFormText
-              width={currentBreakpoint}
               name="holder__nif"
+              width={currentBreakpoint}
               label={formatMessage({
                 id: 'pages.newInsurance.holder.nif.label',
                 defaultMessage: 'NIF',
@@ -268,8 +338,8 @@ export default () => {
               initialValue="12345678Z"
             />
             <ProFormText
-              width={currentBreakpoint}
               name="holder__name"
+              width={currentBreakpoint}
               label={formatMessage({
                 id: 'pages.newInsurance.holder.name.label',
                 defaultMessage: 'Name',
@@ -286,8 +356,8 @@ export default () => {
               }}
             />
             <ProFormText
-              width={currentBreakpoint}
               name="holder__address"
+              width={currentBreakpoint}
               label={formatMessage({
                 id: 'pages.newInsurance.holder.address.label',
                 defaultMessage: 'Address',
@@ -304,8 +374,8 @@ export default () => {
               }}
             />
             <ProFormDigit
-              width={currentBreakpoint}
               name="holder__postal_code"
+              width={currentBreakpoint}
               label={formatMessage({
                 id: 'pages.newInsurance.holder.postalCode.label',
                 defaultMessage: 'Postal Code',
@@ -322,8 +392,8 @@ export default () => {
               }}
             />
             <ProFormText
-              width={currentBreakpoint}
               name="holder__municipality"
+              width={currentBreakpoint}
               label={formatMessage({
                 id: 'pages.newInsurance.holder.municipality.label',
                 defaultMessage: 'Municipality',
@@ -340,8 +410,8 @@ export default () => {
               }}
             />
             <ProFormText
-              width={currentBreakpoint}
               name="holder__locality"
+              width={currentBreakpoint}
               label={formatMessage({
                 id: 'pages.newInsurance.holder.locality.label',
                 defaultMessage: 'Locality',
@@ -358,8 +428,8 @@ export default () => {
               }}
             />
             <ProFormText
-              width={currentBreakpoint}
               name="holder__phone"
+              width={currentBreakpoint}
               label={formatMessage({
                 id: 'pages.newInsurance.holder.phoneNumber.label',
                 defaultMessage: 'Phone Number',
@@ -385,8 +455,8 @@ export default () => {
               }}
             />
             <ProFormText
-              width={currentBreakpoint}
               name="holder__mobile"
+              width={currentBreakpoint}
               label={formatMessage({
                 id: 'pages.newInsurance.holder.mobileNumber.label',
                 defaultMessage: 'Mobile Phone Number',
@@ -406,15 +476,14 @@ export default () => {
                 },
               ]}
               initialValue="123456678"
-              rules={[{ required: true }]}
               fieldProps={{
                 size: 'large',
                 prefix: <MobileOutlined />,
               }}
             />
             <ProFormText
-              width={currentBreakpoint}
               name="holder__email"
+              width={currentBreakpoint}
               label={formatMessage({
                 id: 'pages.newInsurance.holder.email.label',
                 defaultMessage: 'E-mail',
@@ -436,8 +505,8 @@ export default () => {
               }}
             />
             <ProFormText
-              width={currentBreakpoint}
               name="holder__iban"
+              width={currentBreakpoint}
               label={formatMessage({
                 id: 'pages.newInsurance.holder.iban.label',
                 defaultMessage: 'IBAN',
@@ -485,14 +554,15 @@ export default () => {
               description="Click or drag files to this area to upload"
               showRemoveIcon
               fileList={fileList}
-              onChange={({ fileList }) => {
-                setFileList(fileList);
+              onChange={(obj) => {
+                setFileList(obj.fileList);
               }}
               action=""
               customRequest={() => {}}
+              beforeUpload={() => false}
               fieldProps={{
                 listType: 'picture',
-                multiple: 'true',
+                multiple: true,
               }}
             />
 
@@ -506,8 +576,8 @@ export default () => {
                     />
                   </Divider>
                   <ProFormDateTimePicker
-                    width={currentBreakpoint}
                     name="people__request_pcr_date"
+                    width={currentBreakpoint}
                     label={formatMessage({
                       id: 'pages.newInsurance.people.requestPcrDate.label',
                       defaultMessage: 'Preferred Date for Requesting the PCR',
@@ -542,8 +612,8 @@ export default () => {
                         key={i}
                       >
                         <ProFormText
-                          width={currentBreakpoint}
                           name={`people__nif_${i}`}
+                          width={currentBreakpoint}
                           label={formatMessage({
                             id: 'pages.newInsurance.people.nif.label',
                             defaultMessage: 'NIF',
@@ -567,8 +637,8 @@ export default () => {
                           }}
                         />
                         <ProFormText
-                          width={currentBreakpoint}
                           name={`people__name_${i}`}
+                          width={currentBreakpoint}
                           label={formatMessage({
                             id: 'pages.newInsurance.people.name.label',
                             defaultMessage: 'Name',
@@ -583,8 +653,8 @@ export default () => {
                           }}
                         />
                         <ProFormText
-                          width={currentBreakpoint}
                           name={`people__email_${i}`}
+                          width={currentBreakpoint}
                           label={formatMessage({
                             id: 'pages.newInsurance.people.email.label',
                             defaultMessage: 'E-mail',
@@ -600,8 +670,8 @@ export default () => {
                           }}
                         />
                         <ProFormText
-                          width={currentBreakpoint}
                           name={`people__phone_${i}`}
+                          width={currentBreakpoint}
                           label={formatMessage({
                             id: 'pages.newInsurance.people.phone.label',
                             defaultMessage: 'Phone number',
@@ -626,8 +696,8 @@ export default () => {
                           }}
                         />
                         <ProFormRadio.Group
-                          width={currentBreakpoint}
                           name={`people__gender_${i}`}
+                          width={currentBreakpoint}
                           label={formatMessage({
                             id: 'pages.newInsurance.people.gender.label',
                             defaultMessage: 'I am',
@@ -638,30 +708,21 @@ export default () => {
                                 id: 'pages.newInsurance.people.gender.female',
                                 defaultMessage: 'Female',
                               }),
-                              value: formatMessage({
-                                id: 'pages.newInsurance.people.gender.female',
-                                defaultMessage: 'Female',
-                              }),
+                              value: 'FEMALE',
                             },
                             {
                               label: formatMessage({
                                 id: 'pages.newInsurance.people.gender.male',
                                 defaultMessage: 'Male',
                               }),
-                              value: formatMessage({
-                                id: 'pages.newInsurance.people.gender.male',
-                                defaultMessage: 'Male',
-                              }),
+                              value: 'MALE',
                             },
                             {
                               label: formatMessage({
-                                id: 'pages.newInsurance.people.gender.nonBinary',
-                                defaultMessage: 'Non-binary',
+                                id: 'pages.newInsurance.people.gender.uninformed',
+                                defaultMessage: 'Prefer not to say',
                               }),
-                              value: formatMessage({
-                                id: 'pages.newInsurance.people.gender.nonBinary',
-                                defaultMessage: 'Non-binary',
-                              }),
+                              value: 'UNINFORMED',
                             },
                           ]}
                           fieldProps={{
@@ -669,8 +730,8 @@ export default () => {
                           }}
                         />
                         <ProFormDatePicker
-                          width={currentBreakpoint}
                           name={`people__birthday_${i}`}
+                          width={currentBreakpoint}
                           label={formatMessage({
                             id: 'pages.newInsurance.people.birthday.label',
                             defaultMessage: 'Birthday',
@@ -681,8 +742,8 @@ export default () => {
                           }}
                         />
                         <ProFormDateTimePicker
-                          width={currentBreakpoint}
                           name={`people__pcr_date_${i}`}
+                          width={currentBreakpoint}
                           label={formatMessage({
                             id: 'pages.newInsurance.people.pcrDate.label',
                             defaultMessage: 'Negative PCR Date',
