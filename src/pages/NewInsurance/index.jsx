@@ -12,7 +12,7 @@ import {
   ProFormUploadDragger,
 } from '@ant-design/pro-form';
 import { Button, message, Card, Typography, Divider, Grid, Collapse } from 'antd';
-import { useIntl, FormattedMessage } from 'umi';
+import { useIntl, connect, FormattedMessage } from 'umi';
 import {
   CalendarOutlined,
   CreditCardOutlined,
@@ -98,7 +98,7 @@ const parseFormData = async (data) => {
   };
 };
 
-export default () => {
+const NewInsurance = ({ token, apiBaseUri }) => {
   const [step, setStep] = useState(0);
   const [numPeople, setNumPeople] = useState(-1);
   const [fileList, setFileList] = useState([]);
@@ -123,30 +123,28 @@ export default () => {
           onCurrentChange={(current) => setStep(current)}
           onFinish={async (data) => {
             const formData = await parseFormData(data);
-            window.debug_data = { data, formData, moment };
-            console.log(window.debug_data);
 
             setLoading(true);
 
-            const response = await request('http://localhost:8080/insurances', {
+            const response = await request(`${apiBaseUri}/insurances`, {
               method: 'POST',
               headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                Authorization:
-                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJyb2xlIjoiaW5zdXJlciIsImlzcyI6IlVMTCJ9.xrJqsSp4lIp-rI4iHhYcPZnHqgMoa8BUgE-AJWNHTR4',
+                Authorization: `Bearer ${token}`,
               },
               data: formData,
             });
 
-            console.log({ response });
+            if (response.ok) {
+              message.success(
+                formatMessage({
+                  id: 'pages.newInsurance.successMessage',
+                  defaultMessage: 'Submitted successfully',
+                }),
+              );
+            }
 
-            message.success(
-              formatMessage({
-                id: 'pages.newInsurance.successMessage',
-                defaultMessage: 'Submitted successfully',
-              }),
-            );
             setLoading(false);
           }}
           submitter={{
@@ -768,3 +766,8 @@ export default () => {
     </PageContainer>
   );
 };
+
+export default connect(({ login, settings }) => ({
+  token: login.token,
+  apiBaseUri: settings.apiBaseUri,
+}))(NewInsurance);

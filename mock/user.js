@@ -87,20 +87,46 @@ export default {
     const { password, userName, type } = req.body;
     await waitTime(2000);
 
-    if (password === 'ant.design' && userName === 'admin') {
+    if (password === 'pass' && userName === 'admin') {
       res.send({
         status: 'ok',
         type,
         currentAuthority: 'admin',
+        token:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJVTEwifQ.OiehqHgx47KQqybnFhi3lFqooeFU4b_hfub_f5XcH6A',
       });
       return;
     }
 
-    if (password === 'ant.design' && userName === 'user') {
+    if (password === 'pass' && userName === 'taker') {
       res.send({
         status: 'ok',
         type,
-        currentAuthority: 'user',
+        currentAuthority: 'taker',
+        token:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJyb2xlIjoidGFrZXIiLCJpc3MiOiJVTEwifQ.kBqHISpWyPbW5uNnadqCe4BlwyGbULrJHRGv0V-VLQ4',
+      });
+      return;
+    }
+
+    if (password === 'pass' && userName === 'insurer') {
+      res.send({
+        status: 'ok',
+        type,
+        currentAuthority: 'insurer',
+        token:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJyb2xlIjoiaW5zdXJlciIsImlzcyI6IlVMTCJ9.xrJqsSp4lIp-rI4iHhYcPZnHqgMoa8BUgE-AJWNHTR4',
+      });
+      return;
+    }
+
+    if (password === 'pass' && userName === 'lab') {
+      res.send({
+        status: 'ok',
+        type,
+        currentAuthority: 'lab',
+        token:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJyb2xlIjoibGFib3JhdG9yeSIsImlzcyI6IlVMTCJ9.Y0_Sn23eqGutg-fsbIURb9xpSSEtmwPBMXX_JSrvAvw',
       });
       return;
     }
@@ -123,7 +149,7 @@ export default {
   'POST /api/register': (req, res) => {
     res.send({
       status: 'ok',
-      currentAuthority: 'user',
+      currentAuthority: 'admin',
     });
   },
   'GET /api/500': (req, res) => {
