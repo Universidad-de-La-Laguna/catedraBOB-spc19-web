@@ -2,8 +2,22 @@ import { Button, message, notification } from 'antd';
 import React from 'react';
 import { useIntl } from 'umi';
 import defaultSettings from '../config/defaultSettings';
+
 const { pwa } = defaultSettings;
 const isHttps = document.location.protocol === 'https:'; // if pwa is true
+
+// Disable missing translation message as translations will be added later.
+// We can add a toggle for this later when we have most translations.
+
+// eslint-disable-next-line
+const consoleError = console.error.bind(console);
+// eslint-disable-next-line
+console.error = (message, ...args) => {
+  if (typeof message === 'string' && message.startsWith('[React Intl] Missing message:')) {
+    return;
+  }
+  consoleError(message, ...args);
+};
 
 if (pwa) {
   // Notify user if offline now
