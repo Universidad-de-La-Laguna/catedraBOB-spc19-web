@@ -43,7 +43,7 @@ export default [
                 path: '/insurances',
                 name: 'Insurances',
                 icon: 'UnorderedListOutlined',
-                component: './TableList',
+                component: './InsuranceList',
               },
               {
                 path: '/admin',
