@@ -1,3 +1,10 @@
+export const processInsurances = (data) => {
+  return data.map((insurance) => ({
+    ...insurance,
+    takerName: insurance.taker.takerFullName,
+  }));
+};
+
 export const filterByParams = (dataSource, params) => {
   if (params) {
     if (Object.keys(params).length > 0) {
@@ -7,7 +14,8 @@ export const filterByParams = (dataSource, params) => {
             return true;
           }
 
-          if (params[key].includes(`${item[key]}`)) {
+          const itemToLookFor = `${item[key]}`.toLowerCase();
+          if (itemToLookFor.includes(params[key].toLowerCase())) {
             return true;
           }
 

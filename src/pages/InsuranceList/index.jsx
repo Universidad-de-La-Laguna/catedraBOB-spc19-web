@@ -1,4 +1,4 @@
-import { filterByParams, SINISTER_ENUM, sortByParams } from '@/utils/data';
+import { filterByParams, processInsurances, SINISTER_ENUM, sortByParams } from '@/utils/data';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import React, { useState, useRef } from 'react';
@@ -26,6 +26,7 @@ const TableList = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const actionRef = useRef();
+
   const columns = [
     {
       title: 'ID',
@@ -33,6 +34,11 @@ const TableList = () => {
       copyable: true,
       ellipsis: true,
       tip: 'Unique identifier for the insurance',
+    },
+    {
+      title: 'Taker name',
+      dataIndex: 'takerName',
+      ellipsis: true,
     },
     {
       title: 'Assured Price',
@@ -118,7 +124,7 @@ const TableList = () => {
         expandable={{ expandedRowRender }}
         request={(params, sorter, filter) =>
           queryRule({ ...params, sorter, filter }).then((result) => {
-            let dataSource = result.data;
+            let dataSource = processInsurances(result.data);
             dataSource = sortByParams(dataSource, sorter);
             dataSource = filterByParams(dataSource, params);
 
@@ -126,10 +132,6 @@ const TableList = () => {
             return { ...result, data: dataSource };
           })
         }
-        // onLoadingChange={(loading) => {
-        //   console.log({ loading });
-        //   setLoading(loading);
-        // }}
         onRow={(_, index) => {
           if (index === data.length - 1) {
             setLoading(false);
