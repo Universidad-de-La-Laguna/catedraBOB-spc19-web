@@ -5,7 +5,7 @@ import React, { useState, useRef } from 'react';
 import CustomerInfoTable, { processCustomerData } from './CustomerInfoTable';
 import { queryRule } from './service';
 import TakerInfoCard from './TakerInfoCard';
-import { Card, Col, Row, Spin } from 'antd';
+import { Card, Col, Row, Spin, Typography } from 'antd';
 import GraphSinisterPercent from './GraphSinisterPercent';
 import GraphContractsByTakers from './GraphContractsByTakers';
 import GraphContractsByDateAndByTakers from './GraphContractsByDateAndByTakers';
@@ -37,29 +37,31 @@ const TableList = () => {
     {
       title: 'Assured Price',
       dataIndex: 'assuredPrice',
+      render: (dom) => <div style={{ textAlign: 'right', paddingRight: '5px' }}>{dom}€</div>,
       sorter: true,
       hideInForm: true,
+      width: 128,
     },
     {
-      title: 'contractDate',
+      title: 'Contract Date',
       sorter: true,
       dataIndex: 'contractDate',
       valueType: 'dateTime',
     },
     {
-      title: 'startDate',
+      title: 'Start Date',
       sorter: true,
       dataIndex: 'startDate',
       valueType: 'dateTime',
     },
     {
-      title: 'finishDate',
+      title: 'Finish Date',
       sorter: true,
       dataIndex: 'finishDate',
       valueType: 'dateTime',
     },
     {
-      title: 'sinister',
+      title: 'Sinister',
       dataIndex: 'sinister',
       filters: true,
       onFilter: true,
@@ -87,23 +89,26 @@ const TableList = () => {
   return (
     <PageContainer>
       <Row gutter={6}>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Card style={{ margin: '1rem 0' }}>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <Card style={{ margin: '0.5rem 0' }}>
             {loading ? <Spin /> : <GraphSinisterPercent data={data} />}
           </Card>
         </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Card style={{ margin: '1rem 0' }}>
+        <Col xs={24} sm={24} md={18} lg={18}>
+          <Card style={{ margin: '0.5rem 0' }}>
             {loading ? <Spin /> : <GraphContractsByTakers data={data} />}
           </Card>
         </Col>
         <Col span={24}>
-          <Card style={{ margin: '1rem 0' }}>
+          <Card style={{ marginBottom: '0.5rem' }}>
             {loading ? <Spin /> : <GraphContractsByDateAndByTakers data={data} />}
           </Card>
         </Col>
       </Row>
 
+      <Card>
+        <Typography.Title level={3}>Filters</Typography.Title>
+      </Card>
       <ProTable
         headerTitle="Insurances"
         actionRef={actionRef}

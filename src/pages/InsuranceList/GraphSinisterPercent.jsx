@@ -42,7 +42,7 @@ export default ({ data }) => {
     statistic: {
       content: {
         style: {
-          fontSize: 60,
+          fontSize: 32,
           fill: 'black',
           lineHeight: 1,
         },
@@ -52,7 +52,7 @@ export default ({ data }) => {
 
   return (
     <>
-      <Typography.Title level={3}>Sinister percent</Typography.Title>
+      <Typography.Title level={3}>% Sinisters</Typography.Title>
       <Divider />
       <Liquid {...config} />
     </>

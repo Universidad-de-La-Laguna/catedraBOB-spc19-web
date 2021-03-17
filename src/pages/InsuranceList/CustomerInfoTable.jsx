@@ -75,18 +75,32 @@ export default ({ customerData }) => (
       {
         title: 'Ending PCR Request Date',
         dataIndex: 'endingPcrRequestDate',
-        valueType: 'datetime',
+        valueType: 'dateTime',
         sorter: true,
       },
       {
         title: 'Ending PCR Result Date',
         dataIndex: 'endingPcrResultDate',
-        valueType: 'datetime',
+        valueType: 'dateTime',
         sorter: true,
       },
       {
         title: 'Ending PCR Result',
         dataIndex: 'endingPcrResult',
+        valueEnum: {
+          UNKNOWN: {
+            text: 'Unknown',
+            status: 'Default',
+          },
+          NEGATIVE: {
+            text: 'Negative',
+            status: 'Success',
+          },
+          POSITIVE: {
+            text: 'Positive',
+            status: 'Error',
+          },
+        },
       },
     ]}
     headerTitle="Customer Info"
