@@ -21,11 +21,15 @@ export default [
           {
             path: '/',
             component: '../layouts/BasicLayout',
-            authority: ['admin', 'user'],
             routes: [
               {
                 path: '/',
                 redirect: '/welcome',
+              },
+              {
+                path: '/pcr/:insuranceId/:pcrId',
+                component: './PcrResult',
+                authority: ['admin', 'lab'],
               },
               {
                 path: '/welcome',
