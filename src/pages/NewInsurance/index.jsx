@@ -59,6 +59,7 @@ const hashFileProxy = async (fileProxy) => {
 const parseFormData = async (data) => {
   const pcrHashesPromises = data.people__pcrs.map(hashFileProxy);
   const pcrHashes = await Promise.all(pcrHashesPromises);
+  const customerUuids = createArray(pcrHashes.length).map(() => uuidv4());
 
   return {
     id: uuidv4(),
@@ -76,7 +77,7 @@ const parseFormData = async (data) => {
       takerIBAN: data.holder__iban,
     },
     customers: createArray(pcrHashes.length).map((i) => ({
-      customerId: `customer_${i}`,
+      customerId: customerUuids[i - 1],
       customerNif: data[`people__nif_${i}`],
       customerFullName: data[`people__name_${i}`],
       customerGender: data[`people__gender_${i}`],
@@ -84,14 +85,14 @@ const parseFormData = async (data) => {
       customerTelephone: data[`people__phone_${i}`],
       customerEmail: data[`people__email_${i}`],
       negativePcrDate: moment(data[`people__pcr_date_${i}`]).toISOString(),
-      negativePcrHash: pcrHashes[i - 1],
+      negativePcrHash: `0x${pcrHashes[i - 1]}`,
     })),
     contractDate: moment().toISOString(),
     startDate: moment(data.contract__times[0]).toISOString(),
     finishDate: moment(data.contract__times[1]).toISOString(),
     assuredPrice: PECUNIARY_LOSS_OPTIONS[data.contract__pecuniaryLoss],
     pcrRequests: createArray(pcrHashes.length).map((i) => ({
-      customerId: `customer_${i}`,
+      customerId: customerUuids[i - 1],
       requestDate: moment(data.people__request_pcr_date).toISOString(),
       id: uuidv4(),
     })),
@@ -523,7 +524,7 @@ const NewInsurance = ({ token, apiBaseUri }) => {
                   }),
                 },
               ]}
-              initialValue="ES 11 2222 3333 44 5555555555"
+              initialValue="ES7921000813610123456789"
               fieldProps={{
                 prefix: <CreditCardOutlined />,
                 size: 'large',
