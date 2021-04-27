@@ -12,6 +12,7 @@ const Model = {
     type: 'account',
     token:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJVTEwifQ.OiehqHgx47KQqybnFhi3lFqooeFU4b_hfub_f5XcH6A',
+    apiBaseUri: 'http://localhost:8080',
   },
   effects: {
     *login({ payload }, { call, put }) {

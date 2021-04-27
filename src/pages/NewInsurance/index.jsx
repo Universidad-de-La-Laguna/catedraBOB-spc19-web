@@ -98,6 +98,7 @@ const parseFormData = async (data) => {
 };
 
 const NewInsurance = ({ token, apiBaseUri }) => {
+  console.log({ apiBaseUri, token });
   const [step, setStep] = useState(0);
   const [numPeople, setNumPeople] = useState(-1);
   const [fileList, setFileList] = useState([]);
@@ -752,7 +753,7 @@ const NewInsurance = ({ token, apiBaseUri }) => {
   );
 };
 
-export default connect(({ login, settings }) => ({
+export default connect(({ login }) => ({
   token: login.token,
-  apiBaseUri: settings.apiBaseUri,
+  apiBaseUri: login.apiBaseUri,
 }))(NewInsurance);

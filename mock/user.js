@@ -94,6 +94,7 @@ export default {
         currentAuthority: 'admin',
         token:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJVTEwifQ.OiehqHgx47KQqybnFhi3lFqooeFU4b_hfub_f5XcH6A',
+        apiBaseUri: 'http://localhost:8080',
       });
       return;
     }
@@ -105,6 +106,7 @@ export default {
         currentAuthority: 'taker',
         token:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJyb2xlIjoidGFrZXIiLCJpc3MiOiJVTEwifQ.kBqHISpWyPbW5uNnadqCe4BlwyGbULrJHRGv0V-VLQ4',
+        apiBaseUri: 'http://localhost:7082',
       });
       return;
     }
@@ -116,6 +118,7 @@ export default {
         currentAuthority: 'insurer',
         token:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJyb2xlIjoiaW5zdXJlciIsImlzcyI6IlVMTCJ9.xrJqsSp4lIp-rI4iHhYcPZnHqgMoa8BUgE-AJWNHTR4',
+        apiBaseUri: 'http://localhost:7080',
       });
       return;
     }
@@ -127,6 +130,7 @@ export default {
         currentAuthority: 'lab',
         token:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJyb2xlIjoibGFib3JhdG9yeSIsImlzcyI6IlVMTCJ9.Y0_Sn23eqGutg-fsbIURb9xpSSEtmwPBMXX_JSrvAvw',
+        apiBaseUri: 'http://localhost:7084',
       });
       return;
     }

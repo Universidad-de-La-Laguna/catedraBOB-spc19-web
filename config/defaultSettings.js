@@ -9,6 +9,5 @@ const proSettings = {
   title: 'SPC19',
   pwa: false,
   iconfontUrl: '',
-  apiBaseUri: 'http://localhost:8080',
 };
 export default proSettings;
