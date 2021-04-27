@@ -11,7 +11,7 @@ import {
   ProFormRadio,
   ProFormUploadDragger,
 } from '@ant-design/pro-form';
-import { Button, message, Card, Typography, Divider, Grid, Collapse } from 'antd';
+import { Button, notification, Card, Typography, Divider, Grid, Collapse } from 'antd';
 import { useIntl, connect, FormattedMessage } from 'umi';
 import {
   CalendarOutlined,
@@ -29,7 +29,6 @@ import { AlertInvalidNumberPeople } from './AlertInvalidNumberPeople';
 import sha256 from 'crypto-js/sha256';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
-import request from '@/utils/request';
 
 const createArray = (numElements) => new Array(numElements).fill(0).map((_, i) => i + 1);
 
@@ -93,7 +92,6 @@ const parseFormData = async (data) => {
     assuredPrice: PECUNIARY_LOSS_OPTIONS[data.contract__pecuniaryLoss],
     pcrRequests: createArray(pcrHashes.length).map((i) => ({
       customerId: customerUuids[i - 1],
-      requestDate: moment(data.people__request_pcr_date).toISOString(),
       id: uuidv4(),
     })),
   };
@@ -127,23 +125,30 @@ const NewInsurance = ({ token, apiBaseUri }) => {
 
             setLoading(true);
 
-            const response = await request(`${apiBaseUri}/insurances`, {
+            const response = await fetch(`${apiBaseUri}/insurances`, {
               method: 'POST',
               headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
               },
-              data: formData,
+              body: JSON.stringify(formData),
             });
 
             if (response.ok) {
-              message.success(
-                formatMessage({
+              notification.success({
+                message: formatMessage({
                   id: 'pages.newInsurance.successMessage',
-                  defaultMessage: 'Submitted successfully',
+                  defaultMessage: 'Insurance registered correctly',
                 }),
-              );
+              });
+            } else {
+              notification.error({
+                message: formatMessage({
+                  id: 'pages.newInsurance.errorMessage',
+                  defaultMessage: 'Something went wrong',
+                }),
+              });
             }
 
             setLoading(false);
@@ -571,28 +576,7 @@ const NewInsurance = ({ token, apiBaseUri }) => {
                   <Divider>
                     <FormattedMessage
                       id="pages.newInsurance.people.dividerLabel"
-                      defaultMessage="Request PCR Date"
-                    />
-                  </Divider>
-                  <ProFormDateTimePicker
-                    name="people__request_pcr_date"
-                    width={currentBreakpoint}
-                    label={formatMessage({
-                      id: 'pages.newInsurance.people.requestPcrDate.label',
-                      defaultMessage: 'Preferred Date for Requesting the PCR',
-                    })}
-                    fieldProps={{
-                      format: 'YYYY-MM-DD HH:mm',
-                      showSecond: false,
-                      showToday: true,
-                      minuteStep: 15,
-                      size: 'large',
-                    }}
-                  />
-                  <Divider>
-                    <FormattedMessage
-                      id="pages.newInsurance.people.dividerLabel"
-                      defaultMessage="People Data"
+                      defaultMessage="People Info"
                     />
                   </Divider>
                   <Collapse
