@@ -3,11 +3,10 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { message, Card, Typography } from 'antd';
 import ProForm, { ProFormSelect } from '@ant-design/pro-form';
 import { connect } from 'umi';
-import request from '@/utils/request';
 
 const PcrResultForm = (props) => {
   const { token, apiBaseUri } = props;
-  const { insuranceId, pcrId } = props.match.params;
+  const { insuranceId, pcrId, contractAddress } = props.match.params;
 
   return (
     <PageContainer>
@@ -18,8 +17,9 @@ const PcrResultForm = (props) => {
         </Typography.Paragraph>
         <ProForm
           onFinish={async (data) => {
-            const response = await request(
-              `${apiBaseUri}/insurance/${insuranceId}/pcrRequests/${pcrId}`,
+            console.log({ data });
+            const response = await fetch(
+              `${apiBaseUri}/insurance/${insuranceId}/pcrRequests/${pcrId}?contractaddress=${contractAddress}`,
               {
                 method: 'PATCH',
                 headers: {
@@ -27,7 +27,7 @@ const PcrResultForm = (props) => {
                   'Content-Type': 'application/json',
                   Authorization: `Bearer ${token}`,
                 },
-                data: { result: data.pcrResult },
+                body: JSON.stringify({ result: data.pcrResult }),
               },
             );
 
@@ -52,7 +52,7 @@ const PcrResultForm = (props) => {
   );
 };
 
-export default connect(({ login, settings }) => ({
+export default connect(({ login }) => ({
   token: login.token,
-  apiBaseUri: settings.apiBaseUri,
+  apiBaseUri: login.apiBaseUri,
 }))(PcrResultForm);

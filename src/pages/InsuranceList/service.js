@@ -15,30 +15,52 @@ function computeSinister(pcrRequests) {
   return SINISTER_ENUM.PROCESSING;
 }
 
-export async function queryRule(params) {
-  return request('/api/insurances', { params }).then((result) => ({
-    ...result,
-    data: result.data.map((insurance) => ({
+export async function queryInsurances({ token, apiBaseUri }) {
+  const result = await request(`${apiBaseUri}/insurances`, {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  console.log({ result });
+  window.spcResult = result;
+
+  return {
+    data: result.map((insurance) => ({
       ...insurance,
       sinister: computeSinister(insurance.pcrRequests),
     })),
-  }));
+  };
 }
-// export async function removeRule(params) {
-//   return request('/api/rule', {
-//     method: 'POST',
-//     data: { ...params, method: 'delete' },
-//   });
-// }
-// export async function addRule(params) {
-//   return request('/api/rule', {
-//     method: 'POST',
-//     data: { ...params, method: 'post' },
-//   });
-// }
-// export async function updateRule(params) {
-//   return request('/api/rule', {
-//     method: 'POST',
-//     data: { ...params, method: 'update' },
-//   });
-// }
+
+export async function cancelPcrRequest({ token, apiBaseUri, insuranceId, pcrRequestId }) {
+  const result = await fetch(`${apiBaseUri}/insurance/${insuranceId}/pcrRequests/${pcrRequestId}`, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return result;
+}
+
+export async function requestPcr({ token, apiBaseUri, insuranceId, pcrRequestId, customerId }) {
+  const result = await fetch(`${apiBaseUri}/insurance/${insuranceId}/pcrRequests`, {
+    method: 'POST',
+    body: JSON.stringify({
+      id: pcrRequestId,
+      customerId,
+    }),
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return result;
+}

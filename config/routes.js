@@ -27,43 +27,32 @@ export default [
                 redirect: '/welcome',
               },
               {
-                path: '/pcr/:insuranceId/:pcrId',
-                component: './PcrResult',
-                authority: ['admin', 'lab'],
-              },
-              {
                 path: '/welcome',
                 name: 'welcome',
                 icon: 'smile',
                 component: './Welcome',
+                authority: ['admin', 'taker', 'insurer', 'lab'],
+              },
+              {
+                path: '/lab/insurance/:insuranceId/pcr/:pcrId/contract/:contractAddress',
+                component: './PcrResult',
+                name: 'Set PCR',
+                icon: 'Send',
+                authority: ['admin', 'lab'],
               },
               {
                 path: '/new',
                 name: 'New Insurance',
                 icon: 'form',
                 component: './NewInsurance',
+                authority: ['admin', 'taker'],
               },
               {
                 path: '/insurances',
                 name: 'Insurances',
                 icon: 'UnorderedListOutlined',
                 component: './InsuranceList',
-              },
-              {
-                path: '/admin',
-                name: 'admin',
-                icon: 'crown',
-                component: './Admin',
-                authority: ['admin'],
-                routes: [
-                  {
-                    path: '/admin/sub-page',
-                    name: 'sub-page',
-                    icon: 'smile',
-                    component: './Welcome',
-                    authority: ['admin'],
-                  },
-                ],
+                authority: ['admin', 'taker', 'insurer'],
               },
               {
                 component: './404',

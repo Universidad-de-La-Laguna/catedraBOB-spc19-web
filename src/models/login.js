@@ -7,13 +7,7 @@ import { message } from 'antd';
 
 const Model = {
   namespace: 'login',
-  state: {
-    status: 'admin',
-    type: 'account',
-    token:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJVTEwifQ.OiehqHgx47KQqybnFhi3lFqooeFU4b_hfub_f5XcH6A',
-    apiBaseUri: 'http://localhost:8080',
-  },
+  state: {},
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);

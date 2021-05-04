@@ -1,31 +1,76 @@
 import { filterByParams, processInsurances, SINISTER_ENUM, sortByParams } from '@/utils/data';
 import { PageContainer } from '@ant-design/pro-layout';
-import ProTable from '@ant-design/pro-table';
+import ProTable, { TableDropdown } from '@ant-design/pro-table';
 import React, { useState, useRef } from 'react';
 import CustomerInfoTable, { processCustomerData } from './CustomerInfoTable';
-import { queryRule } from './service';
+import { queryInsurances, cancelPcrRequest, requestPcr } from './service';
 import TakerInfoCard from './TakerInfoCard';
-import { Card, Col, Row, Spin, Typography } from 'antd';
+import { Card, Col, Row, Spin, Typography, notification } from 'antd';
+import { connect } from 'umi';
 import GraphSinisterPercent from './GraphSinisterPercent';
 import GraphContractsByTakers from './GraphContractsByTakers';
 import GraphContractsByDateAndByTakers from './GraphContractsByDateAndByTakers';
 
-const expandedRowRender = (data) => {
-  const takerData = data.taker;
-  const customerData = processCustomerData(data);
-
-  return (
-    <div style={{ padding: '1rem' }}>
-      <TakerInfoCard takerData={takerData} />
-      <CustomerInfoTable customerData={customerData} />
-    </div>
-  );
-};
-
-const TableList = () => {
-  const [data, setData] = useState([]);
+const TableList = ({ token, apiBaseUri }) => {
+  const [originalData, setOriginalData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const actionRef = useRef();
+
+  const expandedRowRender = (data) => {
+    const takerData = data.taker;
+    const customerData = processCustomerData(data);
+
+    const onPcrRequestCancel = async (pcrRequestId) => {
+      const response = await cancelPcrRequest({
+        token,
+        apiBaseUri,
+        insuranceId: data.id,
+        pcrRequestId,
+      });
+
+      if (response.ok) {
+        notification.success({
+          message: 'PCR request canceled successfully',
+        });
+      } else {
+        notification.error({
+          message: 'Error canceling PCR request',
+        });
+      }
+    };
+
+    const onNewPcrRequest = async (pcrRequestId, customerId) => {
+      const response = await requestPcr({
+        token,
+        apiBaseUri,
+        insuranceId: data.id,
+        pcrRequestId,
+        customerId,
+      });
+
+      if (response.ok) {
+        notification.success({
+          message: 'Created new PCR request successfully',
+        });
+      } else {
+        notification.error({
+          message: 'Error creating PCR request',
+        });
+      }
+    };
+
+    return (
+      <div style={{ padding: '1rem' }}>
+        <TakerInfoCard takerData={takerData} />
+        <CustomerInfoTable
+          onPcrRequestCancel={onPcrRequestCancel}
+          onNewPcrRequest={onNewPcrRequest}
+          customerData={customerData}
+        />
+      </div>
+    );
+  };
 
   const columns = [
     {
@@ -97,17 +142,17 @@ const TableList = () => {
       <Row gutter={6}>
         <Col xs={24} sm={24} md={6} lg={6}>
           <Card style={{ margin: '0.5rem 0' }}>
-            {loading ? <Spin /> : <GraphSinisterPercent data={data} />}
+            {loading ? <Spin /> : <GraphSinisterPercent data={filteredData} />}
           </Card>
         </Col>
         <Col xs={24} sm={24} md={18} lg={18}>
           <Card style={{ margin: '0.5rem 0' }}>
-            {loading ? <Spin /> : <GraphContractsByTakers data={data} />}
+            {loading ? <Spin /> : <GraphContractsByTakers data={filteredData} />}
           </Card>
         </Col>
         <Col span={24}>
           <Card style={{ marginBottom: '0.5rem' }}>
-            {loading ? <Spin /> : <GraphContractsByDateAndByTakers data={data} />}
+            {loading ? <Spin /> : <GraphContractsByDateAndByTakers data={filteredData} />}
           </Card>
         </Col>
       </Row>
@@ -118,22 +163,27 @@ const TableList = () => {
       <ProTable
         headerTitle="Insurances"
         actionRef={actionRef}
-        rowKey="key"
+        rowKey="id"
         search={{ defaultCollapsed: false, labelWidth: 'auto' }}
         pagination={false}
         expandable={{ expandedRowRender }}
-        request={(params, sorter, filter) =>
-          queryRule({ ...params, sorter, filter }).then((result) => {
-            let dataSource = processInsurances(result.data);
-            dataSource = sortByParams(dataSource, sorter);
-            dataSource = filterByParams(dataSource, params);
+        request={async (params, sorter, filter) => {
+          let result = { data: originalData };
 
-            setData(dataSource);
-            return { ...result, data: dataSource };
-          })
-        }
+          if (originalData.length === 0) {
+            result = await queryInsurances({ token, apiBaseUri });
+            setOriginalData(result.data);
+          }
+
+          let dataSource = processInsurances(result.data);
+          dataSource = sortByParams(dataSource, sorter);
+          dataSource = filterByParams(dataSource, params);
+
+          setFilteredData(dataSource);
+          return { ...result, data: dataSource };
+        }}
         onRow={(_, index) => {
-          if (index === data.length - 1) {
+          if (index === filteredData.length - 1) {
             setLoading(false);
           }
         }}
@@ -143,4 +193,7 @@ const TableList = () => {
   );
 };
 
-export default TableList;
+export default connect(({ login }) => ({
+  token: login.token,
+  apiBaseUri: login.apiBaseUri,
+}))(TableList);

@@ -1,4 +1,6 @@
+import { CloseOutlined, RetweetOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
+import { Button, Tooltip } from 'antd';
 import React from 'react';
 
 export const processCustomerData = (data) => {
@@ -17,41 +19,43 @@ export const processCustomerData = (data) => {
   });
 };
 
-export default ({ customerData }) => (
+export default ({ onPcrRequestCancel, onNewPcrRequest, customerData }) => (
   <ProTable
     columns={[
-      // {
-      //   title: 'Customer ID',
-      //   dataIndex: 'customerId',
-      // },
       {
-        title: 'NIF',
-        dataIndex: 'customerNif',
-      },
-      {
-        title: 'Name',
-        dataIndex: 'customerFullName',
-      },
-      {
-        title: 'Gender',
-        dataIndex: 'customerGender',
-      },
-      {
-        title: 'Birthday',
-        dataIndex: 'customerBirthDate',
-        valueType: 'date',
-        sorter: true,
-      },
-      {
-        title: 'Phone',
-        dataIndex: 'customerTelephone',
-      },
-      {
-        title: 'E-mail',
-        dataIndex: 'customerEmail',
+        title: 'Customer ID',
+        dataIndex: 'customerId',
         copyable: true,
         ellipsis: true,
       },
+      // {
+      //   title: 'NIF',
+      //   dataIndex: 'customerNif',
+      // },
+      // {
+      //   title: 'Name',
+      //   dataIndex: 'customerFullName',
+      // },
+      // {
+      //   title: 'Gender',
+      //   dataIndex: 'customerGender',
+      // },
+      // {
+      //   title: 'Birthday',
+      //   dataIndex: 'customerBirthDate',
+      //   valueType: 'date',
+      //   sorter: true,
+      // },
+      // {
+      //   title: 'Phone',
+      //   dataIndex: 'customerTelephone',
+      // },
+      // {
+      //   title: 'E-mail',
+      //   dataIndex: 'customerEmail',
+      //   copyable: true,
+      //   ellipsis: true,
+      // },
       {
         title: 'Negative PCR Date',
         dataIndex: 'negativePcrDate',
@@ -101,6 +105,52 @@ export default ({ customerData }) => (
             status: 'Error',
           },
         },
+      },
+      // {
+      //   title: 'PCR Request',
+      //   valueType: 'option',
+      //   render: (text, record, _, action) => [
+      //     <div>
+      //       <Button type="danger" block icon={<CloseOutlined />} onClick={() => {
+      //         console.log({record, insuranceId})
+      //       }}>
+      //         Cancel
+      //       </Button>
+      //       <Button type="primary" block icon={<RetweetOutlined />} onClick={() => {
+      //         console.log({record, insuranceId})
+      //       }}>
+      //         Re-request
+      //       </Button>
+      //     </div>
+      //   ],
+      // },
+      {
+        title: 'PCR Request',
+        valueType: 'option',
+        render: (text, record, _, action) => [
+          <div>
+            <Tooltip placement="top" title="Cancel PCR request">
+              <Button
+                type="danger"
+                size="large"
+                icon={<CloseOutlined />}
+                onClick={() => {
+                  onPcrRequestCancel(record.endingPcrId);
+                }}
+              ></Button>
+            </Tooltip>
+            <Tooltip placement="top" title="New  PCR request">
+              <Button
+                type="primary"
+                size="large"
+                icon={<RetweetOutlined />}
+                onClick={() => {
+                  onNewPcrRequest(record.endingPcrId, record.customerId);
+                }}
+              ></Button>
+            </Tooltip>
+          </div>,
+        ],
       },
     ]}
     headerTitle="Customer Info"
