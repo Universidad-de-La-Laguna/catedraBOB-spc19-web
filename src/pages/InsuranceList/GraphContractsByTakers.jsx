@@ -65,7 +65,7 @@ export default ({ data }) => {
   };
   return (
     <>
-      <Typography.Title level={3}>Results per taker</Typography.Title>
+      <Typography.Title level={3}>Insurance results</Typography.Title>
       <Divider />
       <Column {...config} />{' '}
     </>

@@ -52,7 +52,7 @@ export default ({ data }) => {
   };
   return (
     <>
-      <Typography.Title level={3}>Contracts count per date and taker</Typography.Title>
+      <Typography.Title level={3}>Contracts count per date</Typography.Title>
       <Divider />
       <Line {...config} />
     </>
