@@ -19,146 +19,102 @@ export const processCustomerData = (data) => {
   });
 };
 
-export default ({ onPcrRequestCancel, onNewPcrRequest, customerData }) => (
-  <ProTable
-    columns={[
-      {
-        title: 'Customer ID',
-        dataIndex: 'customerId',
-        copyable: true,
-        ellipsis: true,
-      },
-      // {
-      //   title: 'NIF',
-      //   dataIndex: 'customerNif',
-      // },
-      // {
-      //   title: 'Name',
-      //   dataIndex: 'customerFullName',
-      // },
-      // {
-      //   title: 'Gender',
-      //   dataIndex: 'customerGender',
-      // },
-      // {
-      //   title: 'Birthday',
-      //   dataIndex: 'customerBirthDate',
-      //   valueType: 'date',
-      //   sorter: true,
-      // },
-      // {
-      //   title: 'Phone',
-      //   dataIndex: 'customerTelephone',
-      // },
-      // {
-      //   title: 'E-mail',
-      //   dataIndex: 'customerEmail',
-      //   copyable: true,
-      //   ellipsis: true,
-      // },
-      {
-        title: 'Negative PCR Date',
-        dataIndex: 'negativePcrDate',
-        valueType: 'date',
-        sorter: true,
-      },
-      // {
-      //   title: 'Negative PCR Hash',
-      //   dataIndex: 'negativePcrHash',
-      // },
-      // endingPcrId: pcrRequest.id,
-      // endingPcrRequestDate: pcrRequest.requestDate,
-      // endingPcrResultDate: pcrRequest.resultDate,
-      // endingPcrResult: pcrRequest.result,
-      {
-        title: 'Ending PCR ID',
-        dataIndex: 'endingPcrId',
-        copyable: true,
-        ellipsis: true,
-      },
-      {
-        title: 'Ending PCR Request Date',
-        dataIndex: 'endingPcrRequestDate',
-        valueType: 'dateTime',
-        sorter: true,
-      },
-      {
-        title: 'Ending PCR Result Date',
-        dataIndex: 'endingPcrResultDate',
-        valueType: 'dateTime',
-        sorter: true,
-      },
-      {
-        title: 'Ending PCR Result',
-        dataIndex: 'endingPcrResult',
-        valueEnum: {
-          UNKNOWN: {
-            text: 'Unknown',
-            status: 'Default',
-          },
-          NEGATIVE: {
-            text: 'Negative',
-            status: 'Success',
-          },
-          POSITIVE: {
-            text: 'Positive',
-            status: 'Error',
+export default ({ onPcrRequestCancel, onNewPcrRequest, customerData }) => {
+  const [loading, setLoading] = React.useState(false);
+
+  return (
+    <ProTable
+      columns={[
+        {
+          title: 'Customer ID',
+          dataIndex: 'customerId',
+          copyable: true,
+          ellipsis: true,
+        },
+        {
+          title: 'Negative PCR Date',
+          dataIndex: 'negativePcrDate',
+          valueType: 'date',
+          sorter: true,
+        },
+        {
+          title: 'Ending PCR ID',
+          dataIndex: 'endingPcrId',
+          copyable: true,
+          ellipsis: true,
+        },
+        {
+          title: 'Ending PCR Request Date',
+          dataIndex: 'endingPcrRequestDate',
+          valueType: 'dateTime',
+          sorter: true,
+        },
+        {
+          title: 'Ending PCR Result Date',
+          dataIndex: 'endingPcrResultDate',
+          valueType: 'dateTime',
+          sorter: true,
+        },
+        {
+          title: 'Ending PCR Result',
+          dataIndex: 'endingPcrResult',
+          valueEnum: {
+            UNKNOWN: {
+              text: 'Unknown',
+              status: 'Default',
+            },
+            NEGATIVE: {
+              text: 'Negative',
+              status: 'Success',
+            },
+            POSITIVE: {
+              text: 'Positive',
+              status: 'Error',
+            },
           },
         },
-      },
-      // {
-      //   title: 'PCR Request',
-      //   valueType: 'option',
-      //   render: (text, record, _, action) => [
-      //     <div>
-      //       <Button type="danger" block icon={<CloseOutlined />} onClick={() => {
-      //         console.log({record, insuranceId})
-      //       }}>
-      //         Cancel
-      //       </Button>
-      //       <Button type="primary" block icon={<RetweetOutlined />} onClick={() => {
-      //         console.log({record, insuranceId})
-      //       }}>
-      //         Re-request
-      //       </Button>
-      //     </div>
-      //   ],
-      // },
-      {
-        title: 'PCR Request',
-        valueType: 'option',
-        render: (text, record, _, action) => [
-          <div>
-            <Tooltip placement="top" title="Cancel PCR request">
-              <Button
-                type="danger"
-                size="large"
-                icon={<CloseOutlined />}
-                onClick={() => {
-                  onPcrRequestCancel(record.endingPcrId);
-                }}
-              ></Button>
-            </Tooltip>
-            <Tooltip placement="top" title="New  PCR request">
-              <Button
-                type="primary"
-                size="large"
-                icon={<RetweetOutlined />}
-                onClick={() => {
-                  onNewPcrRequest(record.endingPcrId, record.customerId);
-                }}
-              ></Button>
-            </Tooltip>
-          </div>,
-        ],
-      },
-    ]}
-    headerTitle="Customer Info"
-    rowKey="customerId"
-    search={false}
-    options={false}
-    dataSource={customerData}
-    pagination={false}
-    cardBordered={true}
-  />
-);
+        {
+          title: 'PCR Request',
+          valueType: 'option',
+          render: (text, record, _, action) => [
+            <div>
+              <Tooltip placement="top" title="Cancel PCR request">
+                <Button
+                  type="danger"
+                  size="large"
+                  loading={loading}
+                  icon={<CloseOutlined />}
+                  onClick={async () => {
+                    setLoading(true);
+                    await onPcrRequestCancel(record.endingPcrId);
+                    setLoading(false);
+                  }}
+                ></Button>
+              </Tooltip>
+              <Tooltip placement="top" title="New  PCR request">
+                <Button
+                  type="primary"
+                  size="large"
+                  loading={loading}
+                  icon={<RetweetOutlined />}
+                  onClick={async () => {
+                    setLoading(true);
+                    await onNewPcrRequest(record.endingPcrId, record.customerId);
+                    setLoading(false);
+                  }}
+                ></Button>
+              </Tooltip>
+            </div>,
+          ],
+        },
+      ]}
+      headerTitle="Customer Info"
+      rowKey="customerId"
+      search={false}
+      options={false}
+      dataSource={customerData}
+      pagination={false}
+      cardBordered={true}
+    />
+  );
+};
