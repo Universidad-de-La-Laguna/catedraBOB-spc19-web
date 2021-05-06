@@ -173,6 +173,15 @@ const TableList = ({ token, apiBaseUri }) => {
         pagination={false}
         expandable={{ expandedRowRender }}
         params={{ id: idFilter }}
+        onReset={async () => {
+          setIdFilter(null);
+
+          const result = await queryInsurances({ token, apiBaseUri });
+          setOriginalData(result.data);
+
+          let dataSource = processInsurances(result.data);
+          setFilteredData(dataSource);
+        }}
         request={async (params, sorter, filter) => {
           let result = { data: originalData };
 
