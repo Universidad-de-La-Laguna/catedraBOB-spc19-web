@@ -5,8 +5,8 @@ import React, { useState, useRef } from 'react';
 import CustomerInfoTable, { processCustomerData } from './CustomerInfoTable';
 import { queryInsurances, cancelPcrRequest, requestPcr } from './service';
 import TakerInfoCard from './TakerInfoCard';
-import { Card, Col, Row, Spin, Typography, notification } from 'antd';
-import { connect } from 'umi';
+import { Card, Col, Row, Spin, Typography, notification, Input } from 'antd';
+import { connect, history } from 'umi';
 import GraphSinisterPercent from './GraphSinisterPercent';
 import GraphContractsByTakers from './GraphContractsByTakers';
 import GraphContractsByDateAndByTakers from './GraphContractsByDateAndByTakers';
@@ -15,6 +15,7 @@ const TableList = ({ token, apiBaseUri }) => {
   const [originalData, setOriginalData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [idFilter, setIdFilter] = useState(history.location.query.id);
   const actionRef = useRef();
 
   const expandedRowRender = (data) => {
@@ -79,6 +80,10 @@ const TableList = ({ token, apiBaseUri }) => {
       copyable: true,
       ellipsis: true,
       tip: 'Unique identifier for the insurance',
+      fieldProps: {
+        value: idFilter,
+        onChange: (e) => setIdFilter(e.target.value),
+      },
     },
     {
       title: 'Taker name',
@@ -167,6 +172,7 @@ const TableList = ({ token, apiBaseUri }) => {
         search={{ defaultCollapsed: false, labelWidth: 'auto' }}
         pagination={false}
         expandable={{ expandedRowRender }}
+        params={{ id: idFilter }}
         request={async (params, sorter, filter) => {
           let result = { data: originalData };
 
