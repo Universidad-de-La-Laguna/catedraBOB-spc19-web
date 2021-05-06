@@ -12,7 +12,7 @@ import {
   ProFormUploadDragger,
 } from '@ant-design/pro-form';
 import { Button, notification, Card, Typography, Divider, Grid, Collapse } from 'antd';
-import { useIntl, connect, FormattedMessage } from 'umi';
+import { useIntl, connect, FormattedMessage, history } from 'umi';
 import {
   CalendarOutlined,
   CreditCardOutlined,
@@ -140,9 +140,12 @@ const NewInsurance = ({ token, apiBaseUri }) => {
               notification.success({
                 message: formatMessage({
                   id: 'pages.newInsurance.successMessage',
-                  defaultMessage: 'Insurance registered correctly',
+                  defaultMessage:
+                    'Insurance registered correctly! 🎉 \n\nYou will be redirected to the insurance list in a moment...',
                 }),
               });
+
+              setTimeout(() => history.push(`/insurances?id=${formData.id}`), 5000);
             } else {
               notification.error({
                 message: formatMessage({
