@@ -29,15 +29,18 @@ import { AlertInvalidNumberPeople } from './AlertInvalidNumberPeople';
 import sha256 from 'crypto-js/sha256';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+import {
+  NUM_DAYS_LOCKDOWN,
+  MAX_NUM_PEOPLE_PER_CONTRACT,
+  PECUNIARY_LOSS_OPTIONS,
+  DEFAULT_PEOPLE_DATA,
+} from './constants';
 
 const createArray = (numElements) => new Array(numElements).fill(0).map((_, i) => i + 1);
+const NUM_PEOPLE_PER_CONTRACT_OPTIONS = createArray(MAX_NUM_PEOPLE_PER_CONTRACT);
 
 const { Panel } = Collapse;
 const { useBreakpoint } = Grid;
-const NUM_DAYS_LOCKDOWN = 10;
-const MAX_NUM_PEOPLE_PER_CONTRACT = 6;
-const NUM_PEOPLE_PER_CONTRACT_OPTIONS = createArray(MAX_NUM_PEOPLE_PER_CONTRACT);
-const PECUNIARY_LOSS_OPTIONS = [50, 100, 300];
 
 const readBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -548,6 +551,7 @@ const NewInsurance = ({ token, apiBaseUri }) => {
               defaultMessage: 'People',
             })}
             size="large"
+            initialValues={DEFAULT_PEOPLE_DATA}
           >
             <Divider>
               <FormattedMessage
