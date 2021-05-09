@@ -11,10 +11,10 @@ export const processCustomerData = (data) => {
 
     return {
       ...customer,
-      endingPcrId: pcrRequest.id,
-      endingPcrRequestDate: pcrRequest.requestDate,
-      endingPcrResultDate: pcrRequest.resultDate,
-      endingPcrResult: pcrRequest.result,
+      endingPcrId: pcrRequest?.id,
+      endingPcrRequestDate: pcrRequest?.requestDate,
+      endingPcrResultDate: pcrRequest?.resultDate,
+      endingPcrResult: pcrRequest?.result,
     };
   });
 };
