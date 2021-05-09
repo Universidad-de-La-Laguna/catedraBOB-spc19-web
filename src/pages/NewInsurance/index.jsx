@@ -35,6 +35,7 @@ import {
   PECUNIARY_LOSS_OPTIONS,
   DEFAULT_PEOPLE_DATA,
 } from './constants';
+import { waitFor } from '@/utils/wait';
 
 const createArray = (numElements) => new Array(numElements).fill(0).map((_, i) => i + 1);
 const NUM_PEOPLE_PER_CONTRACT_OPTIONS = createArray(MAX_NUM_PEOPLE_PER_CONTRACT);
@@ -148,7 +149,8 @@ const NewInsurance = ({ token, apiBaseUri }) => {
                 }),
               });
 
-              setTimeout(() => history.push(`/insurances?id=${formData.id}`), 5000);
+              await waitFor(5000);
+              history.push(`/insurances?id=${formData.id}`);
             } else {
               notification.error({
                 message: formatMessage({
