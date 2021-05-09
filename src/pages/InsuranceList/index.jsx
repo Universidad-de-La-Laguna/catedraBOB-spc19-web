@@ -99,6 +99,14 @@ const TableList = ({ token, apiBaseUri }) => {
       width: 128,
     },
     {
+      title: 'Estimated Compensation',
+      dataIndex: 'sinisterCompensation',
+      render: (dom) => <div style={{ textAlign: 'right', paddingRight: '5px' }}>{dom}€</div>,
+      sorter: true,
+      hideInForm: true,
+      width: 128,
+    },
+    {
       title: 'Contract Date',
       sorter: true,
       dataIndex: 'contractDate',
