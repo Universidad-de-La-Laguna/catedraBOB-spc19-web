@@ -102,7 +102,6 @@ const parseFormData = async (data) => {
 };
 
 const NewInsurance = ({ token, apiBaseUri }) => {
-  console.log({ apiBaseUri, token });
   const [step, setStep] = useState(0);
   const [numPeople, setNumPeople] = useState(-1);
   const [fileList, setFileList] = useState([]);
@@ -139,24 +138,20 @@ const NewInsurance = ({ token, apiBaseUri }) => {
               },
               body: JSON.stringify(formData),
             });
-
+            
             if (response.ok) {
               notification.success({
-                message: formatMessage({
-                  id: 'pages.newInsurance.successMessage',
-                  defaultMessage:
-                    'Insurance registered correctly! 🎉 \n\nYou will be redirected to the insurance list in a moment...',
-                }),
+                message: 'Insurance registered correctly! 🎉',
+                description: 'You will be redirected to the insurance list in a moment...',
               });
-
+              
               await waitFor(5000);
               history.push(`/insurances?id=${formData.id}`);
             } else {
+              const error = await response.json();
               notification.error({
-                message: formatMessage({
-                  id: 'pages.newInsurance.errorMessage',
-                  defaultMessage: 'Something went wrong',
-                }),
+                message: `Error ${error?.code || ''}`,
+                description: `Message: ${error?.message}`,
               });
             }
 
