@@ -35,8 +35,10 @@ const TableList = ({ token, apiBaseUri }) => {
           message: 'PCR request canceled successfully',
         });
       } else {
+        const error = await response.json();
         notification.error({
-          message: 'Error canceling PCR request',
+          message: `Error ${error?.code || ''}`,
+          description: `Message: ${error?.message}`,
         });
       }
     };
@@ -181,16 +183,18 @@ const TableList = ({ token, apiBaseUri }) => {
         pagination={false}
         expandable={{ expandedRowRender }}
         params={{ id: idFilter }}
-        onReset={async () => {
+        options={{
+          reload: () => {
+            setOriginalData([]);
+            setFilteredData([]);
+            actionRef.current.reload();
+          },
+        }}
+        onReset={() => {
           setIdFilter(null);
-
-          const result = await queryInsurances({ token, apiBaseUri });
-          setOriginalData(result.data);
-
-          let dataSource = processInsurances(result.data);
-          setFilteredData(dataSource);
         }}
         request={async (params, sorter, filter) => {
+          setLoading(true);
           let result = { data: originalData };
 
           if (originalData.length === 0) {

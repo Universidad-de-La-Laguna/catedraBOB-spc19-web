@@ -24,9 +24,6 @@ export async function queryInsurances({ token, apiBaseUri }) {
     },
   });
 
-  console.log({ result });
-  window.spcResult = result;
-
   return {
     data: result.map((insurance) => ({
       ...insurance,
