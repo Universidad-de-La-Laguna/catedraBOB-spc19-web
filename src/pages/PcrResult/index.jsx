@@ -1,8 +1,9 @@
 import React from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { message, Card, Typography } from 'antd';
+import { message, Card, Typography, notification } from 'antd';
 import ProForm, { ProFormSelect } from '@ant-design/pro-form';
-import { connect } from 'umi';
+import { connect, history } from 'umi';
+import { waitFor } from '@/utils/wait';
 
 const PcrResultForm = (props) => {
   const { token, apiBaseUri } = props;
@@ -17,7 +18,6 @@ const PcrResultForm = (props) => {
         </Typography.Paragraph>
         <ProForm
           onFinish={async (data) => {
-            console.log({ data });
             const response = await fetch(
               `${apiBaseUri}/insurance/${insuranceId}/pcrRequests/${pcrId}?contractaddress=${contractAddress}`,
               {
@@ -30,9 +30,21 @@ const PcrResultForm = (props) => {
                 body: JSON.stringify({ result: data.pcrResult }),
               },
             );
-
-            if (response.ok === true || response.ok === undefined) {
-              message.success('Submitted successfully');
+            
+            if (response.ok) {
+              notification.success({
+                message: "PCR result registered correctly!",
+                description: 'You will be redirected to the welcome page in a moment...',
+              });
+              
+              await waitFor(5000);
+              history.push(`/welcome`);
+            } else {
+              const error = await response.json()
+              notification.error({
+                message: `Error ${error?.code || ''}`,
+                description: `Message: ${error?.message}`,
+              });
             }
           }}
         >
