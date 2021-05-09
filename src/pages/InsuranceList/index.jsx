@@ -207,6 +207,11 @@ const TableList = ({ token, apiBaseUri }) => {
           dataSource = filterByParams(dataSource, params);
 
           setFilteredData(dataSource);
+
+          if (dataSource.length === 0) {
+            setLoading(false);
+          }
+
           return { ...result, data: dataSource };
         }}
         onRow={(_, index) => {
