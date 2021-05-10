@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 echo "Removing executing containers..."
 if [ "$( docker container inspect -f '{{.State.Running}}' catedrabob-spc19-web )" == "true" ]; then
