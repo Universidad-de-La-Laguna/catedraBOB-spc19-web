@@ -4,6 +4,11 @@ export default [
     component: '../layouts/BlankLayout',
     routes: [
       {
+        path: '/',
+        component: './Home',
+        authority: ['admin', 'taker', 'insurer', 'lab'],
+      },
+      {
         path: '/user',
         component: '../layouts/UserLayout',
         routes: [
