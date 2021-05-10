@@ -98,6 +98,7 @@ const TableList = ({ token, apiBaseUri }) => {
       render: (dom) => <div style={{ textAlign: 'right', paddingRight: '5px' }}>{dom}€</div>,
       sorter: true,
       hideInForm: true,
+      hideInSearch: true,
       width: 128,
     },
     {
@@ -106,23 +107,27 @@ const TableList = ({ token, apiBaseUri }) => {
       render: (dom) => <div style={{ textAlign: 'right', paddingRight: '5px' }}>{dom}€</div>,
       sorter: true,
       hideInForm: true,
+      hideInSearch: true,
       width: 128,
     },
     {
       title: 'Contract Date',
       sorter: true,
+      hideInSearch: true,
       dataIndex: 'contractDate',
       valueType: 'dateTime',
     },
     {
       title: 'Start Date',
       sorter: true,
+      hideInSearch: true,
       dataIndex: 'startDate',
       valueType: 'dateTime',
     },
     {
       title: 'Finish Date',
       sorter: true,
+      hideInSearch: true,
       dataIndex: 'finishDate',
       valueType: 'dateTime',
     },
@@ -131,6 +136,7 @@ const TableList = ({ token, apiBaseUri }) => {
       dataIndex: 'sinister',
       filters: true,
       onFilter: true,
+      hideInSearch: true,
       valueEnum: {
         [SINISTER_ENUM.PROCESSING]: {
           text: 'Not done yet',
