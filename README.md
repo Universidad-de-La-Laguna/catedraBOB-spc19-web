@@ -1,8 +1,16 @@
-# Ant Design Pro
+# SPC19 - COVID-19 Parametric Insurance
 
-This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
+## Overview
+
+Web application associated to SPC19 project. 
+
+Developed in [React.js](https://react.dev/) using [Ant Design Pro](https://pro.ant.design).
+
+Follow is the quick guide for how to use.
 
 ## Environment Prepare
+
+Use [Node.js](https://nodejs.org/es) v14.21.3 (lts/fermium) to build and run.
 
 Install `node_modules`:
 
@@ -51,6 +59,14 @@ npm run lint:fix
 ```bash
 npm test
 ```
+
+## Operation consideration
+
+Open `http://localhost:8000` to enter in login page. You can use following demo users:
+
+   - **Insurer**: *insurer / pass*
+   - **Hotel**: *taker / pass*
+   - **Laboratory**: *lab / pass*
 
 ## More
 
