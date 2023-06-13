@@ -67,7 +67,3 @@ Open `http://localhost:8000` to enter in login page. You can use following demo 
    - **Insurer**: *insurer / pass*
    - **Hotel**: *taker / pass*
    - **Laboratory**: *lab / pass*
-
-## More
-
-You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).
